@@ -18,7 +18,7 @@ ${OpenCV_INCLUDE_DIRS}
 )
 
 # Build output settings
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
+set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 
 # WallpaperGenerator module main program
 add_executable(ymc-wallpaper-generator
