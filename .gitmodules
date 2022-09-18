@@ -1,0 +1,3 @@
+[submodule "Thirdparty/log.c"]
+	path = Thirdparty/log.c
+	url = git@github.com:YouMustClean/log.c.git
