@@ -1,0 +1,1 @@
+Read log.c documentation
