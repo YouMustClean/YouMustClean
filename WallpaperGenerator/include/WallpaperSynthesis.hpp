@@ -17,13 +17,71 @@
 
 #pragma once
 
+extern "C" {
+#include <log.h>
+}
+
+#include <opencv2/opencv.hpp>
+#include <fmt/core.h>
+
+#include <string>
+#include <list>
+#include <stdexcept>
+
 namespace YMC {
 namespace WallpaperGenerator {
 
+class ImageLayer
+{
+public:
+    ImageLayer(const cv::Mat & _src, int _offset_x = 0, int _offset_y = 0);
+
+public:
+    cv::Mat image;
+    int offset_x;
+    int offset_y;
+
+};
+  
 class WallpaperSynthesis
 {
+public:
+
+    WallpaperSynthesis();
+
+    ///
+    /// Accessors
+    ///
+
+    // canvas
+    const cv::Mat & get_canvas() const { return this->canvas; }
+    bool canvasIsValid() const;
+
+    // layers
+    const std::list<ImageLayer> & get_layers() const;
+    const ImageLayer & get_layer(size_t _i) const;
+    size_t get_layer_num() const;
+
+    ///
+    /// Mutators
+    ///
+
+    // canvas
+    void set_canvas(const cv::Mat & _src) { this->canvas = _src; }
+    void readImageAsCanvas(const std::string & path);
+
+    // layers
+    void addLayer(const ImageLayer & _layer);
+    void addLayer(const cv::Mat & _image, int _offset_x = 0, int _offset_y = 0);
+
+private:
+    /// Image layers
+    cv::Mat                 canvas;
+    std::list<ImageLayer>   layers;
+    size_t                  layer_num;
 
 };
 
 } // YMC
 } // WallpaperGenerator
+

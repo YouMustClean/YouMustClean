@@ -20,10 +20,13 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DLOG_USE_COLOR")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -O2 -D__FILE_SHORT__='\"$(subst $(dir $(abspath $<)),,$(abspath $<))\"'")
 set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -Wall -O1 -g -ggdb -DLOG_USE_COLOR")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D__FILE_SHORT__='\"$(subst $(dir $(abspath $<)),,$(abspath $<))\"'")
+# fmt
+find_package(fmt)
 
 # Thirdparty link libraries
 set(THIRDPARTY_LIBS
 ${OpenCV_LIBS}
+fmt::fmt
 )
 
 # Include directories
@@ -39,6 +42,7 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 # WallpaperGenerator module main program
 add_executable(ymc-wallpaper-generator
 WallpaperGenerator.cpp
+src/WallpaperSynthesis.cpp
 ${LOG_C_SRC}
 )
 
