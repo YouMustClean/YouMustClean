@@ -22,11 +22,6 @@ namespace WallpaperGenerator {
 
 /// class ImageLayer
 
-WallpaperSynthesis::WallpaperSynthesis()
-{
-    this->layer_num = 0;
-}
-
 ImageLayer::ImageLayer(const cv::Mat & _src, int _offset_x, int _offset_y)
 {
     this->image = _src;
@@ -34,9 +29,38 @@ ImageLayer::ImageLayer(const cv::Mat & _src, int _offset_x, int _offset_y)
     this->offset_y = _offset_y;
 }
 
+
 /// class WallpaperSynthesis
 
-void WallpaperSynthesis::readImageAsCanvas(const std::string & path)
+WallpaperSynthesis::WallpaperSynthesis()
+{
+    this->layer_num = 0;
+}
+
+
+// canvas
+
+const cv::Mat &
+WallpaperSynthesis::get_canvas() const
+{
+    return this->canvas;
+}
+
+bool
+WallpaperSynthesis::canvasIsValid() const
+{
+    log_debug("Canvas is valid: %s", (this->canvas.data != nullptr) ? "true" : "false");
+    return this->canvas.data != nullptr;
+}
+
+void
+WallpaperSynthesis::set_canvas(const cv::Mat & _src)
+{
+    this->canvas = _src;
+}
+
+void
+WallpaperSynthesis::readImageAsCanvas(const std::string & path)
 {
     this->canvas = cv::imread(path, cv::IMREAD_UNCHANGED);
     if (this->canvas.data == nullptr)
@@ -45,11 +69,8 @@ void WallpaperSynthesis::readImageAsCanvas(const std::string & path)
     }
 }
 
-bool WallpaperSynthesis::canvasIsValid() const
-{
-    log_debug("Canvas is valid: %s", (this->canvas.data != nullptr) ? "true" : "false");
-    return this->canvas.data != nullptr;
-}
+
+// layers
 
 const std::list<ImageLayer> &
 WallpaperSynthesis::get_layers() const
@@ -58,7 +79,7 @@ WallpaperSynthesis::get_layers() const
 }
 
 const ImageLayer &
-WallpaperSynthesis::get_layer(size_t _i) const
+WallpaperSynthesis::get_layer_at(size_t _i) const
 {
     if (_i > this->layer_num)
     {
@@ -75,12 +96,14 @@ WallpaperSynthesis::get_layer(size_t _i) const
     return *it;
 }
 
-size_t WallpaperSynthesis::get_layer_num() const
+size_t
+WallpaperSynthesis::get_layer_num() const
 {
     return this->layer_num;
 }
 
-void WallpaperSynthesis::addLayer(const ImageLayer & _layer)
+void
+WallpaperSynthesis::addLayer(const ImageLayer & _layer)
 {
     this->layers.push_back(_layer);
     ++(this->layer_num);
@@ -90,7 +113,8 @@ void WallpaperSynthesis::addLayer(const ImageLayer & _layer)
               fmt::format("Current number of layers: {}.", this->layer_num)).c_str());
 }
 
-void WallpaperSynthesis::addLayer(const cv::Mat & _image, int _offset_x, int _offset_y)
+void
+WallpaperSynthesis::addLayer(const cv::Mat & _image, int _offset_x, int _offset_y)
 {
     ImageLayer _layer = ImageLayer(_image, _offset_x, _offset_y);
     this->layers.push_back(_layer);

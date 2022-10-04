@@ -50,27 +50,22 @@ public:
     WallpaperSynthesis();
 
     ///
-    /// Accessors
+    ///  Accessible Properties
     ///
 
     // canvas
-    const cv::Mat & get_canvas() const { return this->canvas; }
+    const cv::Mat & get_canvas() const;
     bool canvasIsValid() const;
+
+    void set_canvas(const cv::Mat & _src);
+    void readImageAsCanvas(const std::string & path);
+
 
     // layers
     const std::list<ImageLayer> & get_layers() const;
-    const ImageLayer & get_layer(size_t _i) const;
+    const ImageLayer & get_layer_at(size_t _i) const;
     size_t get_layer_num() const;
 
-    ///
-    /// Mutators
-    ///
-
-    // canvas
-    void set_canvas(const cv::Mat & _src) { this->canvas = _src; }
-    void readImageAsCanvas(const std::string & path);
-
-    // layers
     void addLayer(const ImageLayer & _layer);
     void addLayer(const cv::Mat & _image, int _offset_x = 0, int _offset_y = 0);
 
