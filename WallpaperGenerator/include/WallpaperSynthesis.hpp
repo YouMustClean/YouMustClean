@@ -17,12 +17,27 @@
 
 #pragma once
 
+#include <opencv2/core/core.hpp>
+#include <opencv2/freetype.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/highgui/highgui.hpp>
+
+#include "json.hpp"
+using json = nlohmann::json;
+
+#include <iostream>
+#include <string>
+#include <fstream>
+
+using namespace std;
+
 namespace YMC {
 namespace WallpaperGenerator {
 
 class WallpaperSynthesis
 {
-
+public:
+  int putCenteredTextOnImg(string imageName, string text, string fontName, string outputPath);
 };
 
 } // YMC

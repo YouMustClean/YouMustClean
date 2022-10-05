@@ -6,6 +6,7 @@ if [ $? -eq 0 ]; then
 	echo -e "\n--------------- Build Success, Running... ---------------\n"
 	cd ../bin
 	./ymc-wallpaper-generator
+	echo -e "\n--------------- Program Returned Exit Status $? ---------------\n"
 else
 	echo -e "\n--------------- Build Failed, Terminating... ---------------\n"
 fi
