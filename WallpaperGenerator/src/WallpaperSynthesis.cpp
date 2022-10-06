@@ -20,37 +20,37 @@
 namespace YMC {
 namespace WallpaperGenerator {
 
-int WallpaperSynthesis::putCenteredTextOnImg(string imageName, string text, string fontName, string outputPath) {
-  // read image in opencv matrix
-  cv::Mat img=cv::imread("../img/" + imageName);
+cv::Mat WallpaperSynthesis::putTextOnImg(cv::Mat img, string text, string style) {
 
   // read settings.json file
   std::ifstream f("../settings.json");
-  json settings = json::parse(f);
+  json settings = json::parse(f).at(style);
 
   // store settings data in proper variables
   int fontHeight=settings.at("fontHeight");
 	int thickness=settings.at("thickness");
 	int lineStyle=settings.at("lineStyle");
 	int baseline=settings.at("baseline");
+  double textOffsetX=settings.at("textOffsetX");
+  double textOffsetY=settings.at("textOffsetY");
+  cv::Scalar color(settings.at("colorB"), settings.at("colorG"), settings.at("colorR"));
+
 
   // initialize font
   cv::Ptr<cv::freetype::FreeType2> ft2;
 	ft2=cv::freetype::createFreeType2();
-	ft2->loadFontData("../fonts/" + fontName, 0);
+	ft2->loadFontData(settings.at("fontPath"), 0);
 
-  // set text position to make it be in the center
+  // set text position
   cv::Size textSize=ft2->getTextSize(text,fontHeight,thickness,&baseline);
-	cv::Point textOrg((img.cols - textSize.width) / 2,
-              (img.rows + textSize.height) / 2);
+	cv::Point textOrg((img.cols - textSize.width) * textOffsetX,
+                    (img.rows - fontHeight) * textOffsetY - fontHeight * 0.16); // some magic number that just works
   
   // put the text on the image
   ft2->putText(img, text, textOrg, fontHeight,
-             cv::Scalar(255,255,0), thickness, lineStyle, true );
-  
-  imwrite("../" + outputPath, img);
+             color, thickness, lineStyle, false );
 
-  return 0;
+  return img;
 }
 
 } // YMC

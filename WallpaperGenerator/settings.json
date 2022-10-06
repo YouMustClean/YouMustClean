@@ -1,7 +1,29 @@
 {
+
+"title": {
   "fontHeight": 500,
   "thickness": -1,
   "lineStyle": 8,
   "baseline": 0,
-  "font": "MengxiangHeijian.ttf"
+  "fontPath": "../fonts/MengxiangHeijian.ttf",
+  "textOffsetX": 0.5,
+  "textOffsetY": 0.4,
+  "colorR": 0,
+  "colorG": 255,
+  "colorB": 255
+},
+
+"subtitle": {
+  "fontHeight": 100,
+  "thickness": 6,
+  "lineStyle": 8,
+  "baseline": 0,
+  "fontPath": "../fonts/Microsoft Yahei.ttf",
+  "textOffsetX": 0.5,
+  "textOffsetY": 0.7,
+  "colorR": 210,
+  "colorG": 52,
+  "colorB": 24
+}
+
 }

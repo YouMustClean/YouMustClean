@@ -37,7 +37,7 @@ namespace WallpaperGenerator {
 class WallpaperSynthesis
 {
 public:
-  int putCenteredTextOnImg(string imageName, string text, string fontName, string outputPath);
+  cv::Mat putTextOnImg(cv::Mat img, string text, string style);
 };
 
 } // YMC
