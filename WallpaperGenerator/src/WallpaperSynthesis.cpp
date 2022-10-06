@@ -35,6 +35,18 @@ ImageLayer::ImageLayer(const cv::Mat & _src, int _offset_x, int _offset_y)
 WallpaperSynthesis::WallpaperSynthesis()
 {
     this->layer_num = 0;
+    this->image_buffer_update = true;
+}
+
+const cv::Mat &
+WallpaperSynthesis::synthesizeImage()
+{
+    // Synthesize if not up to date
+    if (!(this->image_buffer_update))
+    {
+        this->image_buffer = this->synthesize_cpu_single_core();
+    }
+    return this->image_buffer;
 }
 
 
@@ -57,14 +69,17 @@ void
 WallpaperSynthesis::set_canvas(const cv::Mat & _src)
 {
     this->canvas = _src;
+    this->image_buffer_update = false;
 }
 
 void
 WallpaperSynthesis::readImageAsCanvas(const std::string & path)
 {
     this->canvas = cv::imread(path, cv::IMREAD_UNCHANGED);
+    this->image_buffer_update = false;
     if (this->canvas.data == nullptr)
     {
+        this->image_buffer_update = true;
         log_warn("Image \"%s\" is invalid, canvas image is not set.", path.c_str());
     }
 }
@@ -107,6 +122,7 @@ WallpaperSynthesis::addLayer(const ImageLayer & _layer)
 {
     this->layers.push_back(_layer);
     ++(this->layer_num);
+    this->image_buffer_update = false;
     log_info((fmt::format("WallpaperSynthesis {}, ", (void*)this) +
               fmt::format("adding a new layer {{Offset = ({}, {})}}. ",
                           _layer.offset_x, _layer.offset_y) +
@@ -119,10 +135,31 @@ WallpaperSynthesis::addLayer(const cv::Mat & _image, int _offset_x, int _offset_
     ImageLayer _layer = ImageLayer(_image, _offset_x, _offset_y);
     this->layers.push_back(_layer);
     ++(this->layer_num);
+    this->image_buffer_update = false;
     log_info((fmt::format("WallpaperSynthesis {}, ", (void*)this) +
               fmt::format("adding a new layer {{Offset = ({}, {})}}. ",
                           _offset_x, _offset_y) +
               fmt::format("Current number of layers: {}.", this->layer_num)).c_str());
+}
+
+
+// helpers
+
+void
+WallpaperSynthesis::FusionRGBA(cv::Mat & _dest, const cv::Mat & _src)
+{
+}
+
+cv::Mat
+WallpaperSynthesis::synthesize_cpu_single_core()
+{
+    this->image_buffer = this->canvas.clone();
+    // Iterate layers
+    for (auto iter = this->layers.begin(); iter != this->layers.end(); ++iter)
+    {
+        // Fuse layers...
+    }
+    return this->image_buffer;
 }
 
 } // YMC

@@ -49,6 +49,8 @@ public:
 
     WallpaperSynthesis();
 
+    const cv::Mat & synthesizeImage();
+
     ///
     ///  Accessible Properties
     ///
@@ -70,11 +72,27 @@ public:
     void addLayer(const cv::Mat & _image, int _offset_x = 0, int _offset_y = 0);
 
 private:
+    
+    ///
+    /// Helper Methods
+    ///
+
+    // cv::Mat _dest is assumed to be 2-dimensional RGBA image
+    static void FusionRGBA(cv::Mat & _dest, const cv::Mat & src);
+
+    cv::Mat synthesize_cpu_single_core();
+
+private:
     /// Image layers
     cv::Mat                 canvas;
     std::list<ImageLayer>   layers;
     size_t                  layer_num;
 
+    // Synthesized image buffer
+    cv::Mat image_buffer;
+    // true: up to date
+    // false: need to update
+    bool    image_buffer_update;
 };
 
 } // YMC
