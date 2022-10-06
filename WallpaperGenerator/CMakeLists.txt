@@ -3,6 +3,11 @@ project(WallpaperGenerator)
 
 set(CMAKE_CXX_STANDARD 17)
 
+
+IF(NOT CMAKE_BUILD_TYPE)
+  SET(CMAKE_BUILD_TYPE Debug)
+ENDIF()
+
 #
 # -DLOG_USE_COLOR: let log.c display color
 #
@@ -10,6 +15,10 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -O2")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -O2")
 set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -Wall -O0 -g -ggdb")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -O0 -g -ggdb")
+# Export compile informations
+if(${CMAKE_BUILD_TYPE} STREQUAL Debug)
+    set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+endif()
 
 # OpenCV
 find_package(OpenCV REQUIRED)
