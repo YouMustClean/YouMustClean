@@ -7,13 +7,11 @@ int main()
 {
 	YMC::WallpaperGenerator::WallpaperSynthesis synthesizer;
 
-	Mat img = imread("../img/lake.jpg");
+	json settings = synthesizer.readSettings("../settings.json", "title");
 
-	Mat imgWithText;
-	imgWithText = synthesizer.putTextOnImg(img, "你好", "title");
-	imgWithText = synthesizer.putTextOnImg(imgWithText, "这是一个副标题", "subtitle");
+	Mat img = synthesizer.getTextImg("你好hello", settings);
 
-	imwrite("../output.jpg", imgWithText);
+	imwrite("../output.jpg", img);
 
 	return 0;
 }

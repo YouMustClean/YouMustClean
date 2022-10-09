@@ -20,35 +20,48 @@
 namespace YMC {
 namespace WallpaperGenerator {
 
-cv::Mat WallpaperSynthesis::putTextOnImg(cv::Mat img, string text, string style) {
-
+json WallpaperSynthesis::readSettings(string settingsPath, string style) {
   // read settings.json file
-  std::ifstream f("../settings.json");
+  ifstream f("../settings.json");
   json settings = json::parse(f).at(style);
+/* 
+  // convert json type to map type
+  map<string, any> settings;
+  for (auto& element : j.items()) {
+      std::cout << element.key() << " maps to " << element.value() << std::endl;
+      settings[element.key()] = element.value();
+  }
+ */  
+  return settings;
+}
+
+Mat WallpaperSynthesis::getTextImg(string text, json settings) {
+
+  // default settings: probably don't need to be changed
+  int lineStyle = 8;
+  int baseline = 0;
 
   // store settings data in proper variables
-  int fontHeight=settings.at("fontHeight");
-	int thickness=settings.at("thickness");
-	int lineStyle=settings.at("lineStyle");
-	int baseline=settings.at("baseline");
-  double textOffsetX=settings.at("textOffsetX");
-  double textOffsetY=settings.at("textOffsetY");
-  cv::Scalar color(settings.at("colorB"), settings.at("colorG"), settings.at("colorR"));
+  int fontHeight = settings.at("fontHeight");
+  int thickness = settings.at("thickness");
+  string fontPath = settings.at("fontPath"); // settings["fontPath"];
 
+  Scalar color(settings.at("colorB"), settings.at("colorG"), settings.at("colorR"));
 
   // initialize font
-  cv::Ptr<cv::freetype::FreeType2> ft2;
-	ft2=cv::freetype::createFreeType2();
-	ft2->loadFontData(settings.at("fontPath"), 0);
+  Ptr<freetype::FreeType2> ft2;
+	ft2=freetype::createFreeType2();
+	ft2->loadFontData(fontPath, 0);
 
-  // set text position
-  cv::Size textSize=ft2->getTextSize(text,fontHeight,thickness,&baseline);
-	cv::Point textOrg((img.cols - textSize.width) * textOffsetX,
-                    (img.rows - fontHeight) * textOffsetY - fontHeight * 0.16); // some magic number that just works
+  // create empty image
+  Size textSize=ft2->getTextSize(text,fontHeight,thickness, &baseline);
+  // Mat img = Mat::zeros(Size(textSize.width,textSize.height),CV_8UC1);
+  // Mat img = imread("../img/lake.jpg");
+  cv::Mat img(textSize.height * 1.6, textSize.width * 1.1, CV_8UC3, cv::Scalar(0,0,0));
   
   // put the text on the image
-  ft2->putText(img, text, textOrg, fontHeight,
-             color, thickness, lineStyle, false );
+  ft2->putText(img, text, Point(0,0), fontHeight,
+             color, thickness, lineStyle, false ); // magic number that just works
 
   return img;
 }

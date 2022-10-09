@@ -28,8 +28,11 @@ using json = nlohmann::json;
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <map>
+#include <any>
 
 using namespace std;
+using namespace cv;
 
 namespace YMC {
 namespace WallpaperGenerator {
@@ -37,7 +40,27 @@ namespace WallpaperGenerator {
 class WallpaperSynthesis
 {
 public:
-  cv::Mat putTextOnImg(cv::Mat img, string text, string style);
+/**
+ * get settings data from a json file
+ * 
+ * settings should include: "fontHeight", "thickness", "fontPath", "colorR", "colorG", and "colorB".
+ * 
+ * @param settingsPath the file from which the settings should be read
+ * @param style the settings style to be applied
+ * 
+ * @return json data
+ */
+  json readSettings(string settingsPath, string style);
+
+/**
+ * Make an image with the text provided and the map of settings
+ * 
+ * @param text the text to be put on the image
+ * @param settings the map of settings to be applied on the text
+ * 
+ * @return image with the text on it.
+ */ 
+  Mat getTextImg(string text, json settings);
 };
 
 } // YMC
