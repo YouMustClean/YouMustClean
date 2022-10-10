@@ -1,3 +1,7 @@
 [submodule "Thirdparty/log.c"]
 	path = Thirdparty/log.c
 	url = git@github.com:YouMustClean/log.c.git
+
+#[submodule "ThirdParty/log.c"]
+#	path = ThirdParty/log.c
+#	url = git@github.com:rxi/log.c.git

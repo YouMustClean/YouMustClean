@@ -17,6 +17,7 @@
 
 #pragma once
 
+
 extern "C" {
 #include <log.h>
 }
@@ -24,9 +25,24 @@ extern "C" {
 #include <opencv2/opencv.hpp>
 #include <fmt/core.h>
 
+#include <opencv2/core/core.hpp>
+#include <opencv2/freetype.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/highgui/highgui.hpp>
+
+#include "json.hpp"
+using json = nlohmann::json;
+
+#include <iostream>
+#include <fstream>
 #include <string>
 #include <list>
 #include <stdexcept>
+#include <map>
+
+using namespace std;
+using namespace cv;
+
 
 namespace YMC {
 namespace WallpaperGenerator {
@@ -71,6 +87,29 @@ public:
     void addLayer(const ImageLayer & _layer);
     void addLayer(const cv::Mat & _image, int _offset_x = 0, int _offset_y = 0);
 
+    /**
+     * get settings data from a json file
+     * 
+     * settings should include: "fontHeight", "thickness", "fontPath", "colorR", "colorG", and "colorB".
+     * 
+     * @param settingsPath the file from which the settings should be read
+     * @param style the settings style to be applied
+     * 
+     * @return json data
+     */
+    json readSettings(string settingsPath, string style);
+
+    /**
+     * Make an image with the text provided and the settings data
+     * 
+     * @param text the text to be put on the image
+     * @param settings the settings to be applied on the text
+     * 
+     * @return image with the text on it.
+     */ 
+    Mat getTextImg(string text, json settings);
+
+
 private:
     
     ///
@@ -93,8 +132,6 @@ private:
     // true: up to date
     // false: need to update
     bool    image_buffer_update;
-};
 
 } // YMC
 } // WallpaperGenerator
-
