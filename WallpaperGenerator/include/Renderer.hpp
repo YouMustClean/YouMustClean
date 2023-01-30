@@ -30,15 +30,11 @@ extern "C" {
 
 namespace YMC {
 namespace WallpaperGenerator {
+namespace Renderer {
 
-class Renderer
-{
-    Renderer();
+void putImage(cv::Mat src, Coord offset, cv::Mat dst);
 
-    void printImage(cv::Mat src);
-
-}; // Renderer
-
+} // Renderer
 } // WallpaperGenerator
 } // YMC
 

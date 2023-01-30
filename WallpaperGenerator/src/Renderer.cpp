@@ -19,15 +19,21 @@
 
 namespace YMC {
 namespace WallpaperGenerator{
+namespace Renderer {
 
-Renderer::Renderer()
+/**
+ * @brief To merge source image on destination image.
+ * @note Param dst has to be a 4 channels matrix.
+ */
+void putImage(cv::Mat src, Coord offset, cv::Mat dst)
 {
+    src.channels();
+
+    /// RGB
+    /// RGBA images
 }
 
-void Renderer::printImage(cv::Mat src)
-{
-}
-
+} // Renderer
 } // WallpaperGenerator
 } // YMC
 
