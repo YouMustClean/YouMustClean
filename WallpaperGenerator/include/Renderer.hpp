@@ -23,7 +23,7 @@ extern "C" {
 
 #include "DataTypes.hpp"
 
-#include <opencv2/opencv.hpp>
+#include <opencv2/freetype.hpp>
 
 #include <string>
 #include <vector>
@@ -32,7 +32,9 @@ namespace YMC {
 namespace WallpaperGenerator {
 namespace Renderer {
 
-void putImage(cv::Mat src, Coord offset, cv::Mat dst);
+void putImage(cv::Mat &src, Point offset, cv::Mat &dst);
+
+void putText(TextConfig conf, const cv::Mat &dst);
 
 } // Renderer
 } // WallpaperGenerator

@@ -19,5 +19,18 @@
 
 #include <vector>
 
-typedef std::pair<int, int> Coord;
+#include <opencv2/opencv.hpp>
 
+using namespace std;
+using namespace cv;
+
+struct TextConfig {
+	int height;
+	Point offset;
+	string fontPath, content;
+	Scalar color;
+	bool isPercent = false;
+
+	// normally won't be changed
+	int thickness = -1, lineStyle = 8, baseline = 0;
+};
