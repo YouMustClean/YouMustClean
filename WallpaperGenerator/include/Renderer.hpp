@@ -32,7 +32,7 @@ namespace YMC {
 namespace WallpaperGenerator {
 namespace Renderer {
 
-void putImage(cv::Mat src, Coord offset, cv::Mat dst);
+void putImage(const cv::Mat & src, cv::Point  offset, cv::Mat & dst);
 
 } // Renderer
 } // WallpaperGenerator
