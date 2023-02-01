@@ -1,21 +1,17 @@
+#include <iostream>
 #include "Renderer.hpp"
-using namespace YMC;
-using namespace WallpaperGenerator;
+#include <opencv2/opencv.hpp>
+using namespace YMC::WallpaperGenerator::Renderer;
+using namespace cv;
 
 int main() {
-	Mat img = imread("windows.jpg");
-
-	TextConfig conf = {
-		200, // height
-		{50,50}, // offset
-		"../fonts/Microsoft Yahei.ttf", // fontpath
-		"你好opencv", // content
-		{54, 39, 97}, // color
-		true // ispercent
-	};
-	Renderer::putText(conf, img);
-
-	imwrite("output.jpg", img);
-
+    printf("Hello!\n");
+    Mat src = imread("../../testymc/yaya.png");
+    Mat background = imread("../../testymc/sun.jpg");
+    cvtColor(src, src, COLOR_RGB2RGBA);
+    cvtColor(background, background, COLOR_RGB2RGBA);
+    putImage(src, Point(1500, -500), background);
+    log_debug("background: (%d, %d, %d)", background.cols, background.rows, background.channels());
+    cv::imwrite("output.png", background); 
     return 0;
 }
