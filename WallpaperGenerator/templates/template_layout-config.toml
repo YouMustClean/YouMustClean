@@ -1,0 +1,59 @@
+# layout-config.toml: Config file that tells YMC::WallpaperGenerator
+# how to generate a wallpaper.
+#
+# NOTE: THIS IS AN UNCOMPLETED TEMPLATE. Please revise this template
+# according to the demand and as the software improves.
+#
+# VERSION: 0.1
+#
+
+## Global settings ##
+default_font = ''   #< YOU MUST SET THIS UP!!!
+                    #< has to be a .ttf file
+
+## Canvas settings ##
+[canvas]
+image_source = ''
+
+
+## Array of elemects ##
+# This is a SEQUENTIAL array.
+# Element that comes FIRST will be at the BOTTOM.
+#
+# NOTE: The coordinate starts from the top-left corner of the canvas.
+
+# Image, as a background
+[[elements]]
+type = 'image'
+path = ''       #< path to the image file
+# Position of the image's center
+[position]
+x = 'center'    #< center of the canvas
+y = '50%'       #< same as above
+
+# Text. Say hello!
+[[elements]]
+type = 'text'
+value = '"Hello! Don\'t forget to do your cleaning today."'
+#< to display the content literally itself, put them inside a pair of "",
+#< otherwise the content would be parsed
+#
+#font = ''          #< font of the text, use default if not indicated
+height = '40%'      #< determines the height of the text box
+color = '#000000'   #< RGB color, hexadecimal
+# Position of the text's center
+[position]
+x = 'center'
+y = '40%'       #< 30% of the canvas' height away from the top
+
+# Text, tells today's date.
+[[elements]]
+type = 'text'
+value = 'os.date()' #< tells local date
+#font = ''
+height = '30%'
+color = '#000000'
+[position]
+x = 'center'
+y = '80%'
+
