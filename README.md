@@ -65,6 +65,6 @@ cmake -DOPENCV_EXTRA_MODULES_PATH=../../opencv_contrib/modules ..
 sudo make install -j4
 ```
 
-Note that if you are putting `opencv_contrib` somewhere else, you should replace that parameter to your own path.
+Note that if you are putting `opencv_contrib` somewhere else, you should replace that parameter with your own path.
 
 P.S. The given process will build default modules of OpenCV and all extra modules in opencv\_contrib. If you don't want all of them, or if you want to know something more, you can learn it [here](https://github.com/opencv/opencv_contrib).

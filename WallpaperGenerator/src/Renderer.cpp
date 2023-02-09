@@ -145,6 +145,30 @@ void putImage(const cv::Mat & src, cv::Point offset, cv::Mat & dst)
     log_debug("all channels merged, END OF INVOCATION");
 }
 
+/**
+ * @brief put text on a destination image.
+ */
+void putText(TextConfig conf, const cv::Mat &dst) {
+	// initialize font
+	Ptr<freetype::FreeType2> ft2;
+	ft2 = freetype::createFreeType2();
+	ft2->loadFontData(conf.fontPath, 0);
+	
+	// set text position
+	Size textSize = ft2->getTextSize(conf.content, conf.height, conf.thickness, &conf.baseline);
+	Point textOrg;
+	if (conf.isPercent) {
+		textOrg.x = (dst.cols - textSize.width) * conf.offset.x / 100;
+		textOrg.y = (dst.rows - conf.height) * conf.offset.y / 100;
+	}
+	else {
+		textOrg = conf.offset;
+	}
+
+	// put text on image
+	ft2->putText(dst, conf.content, textOrg, conf.height, conf.color, conf.thickness, conf.lineStyle, false);
+}
+
 } // Renderer
 } // WallpaperGenerator
 } // YMC
