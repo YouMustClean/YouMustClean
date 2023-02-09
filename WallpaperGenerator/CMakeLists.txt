@@ -29,6 +29,8 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DLOG_USE_COLOR")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -O2 -D__FILE_SHORT__='\"$(subst $(dir $(abspath $<)),,$(abspath $<))\"'")
 set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -Wall -O1 -g -ggdb -DLOG_USE_COLOR")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D__FILE_SHORT__='\"$(subst $(dir $(abspath $<)),,$(abspath $<))\"'")
+# toml11
+set(TOML11_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/../Thirdparty/toml11/)
 
 # Thirdparty link libraries
 set(THIRDPARTY_LIBS
@@ -40,6 +42,7 @@ include_directories(
 ${PROJECT_SOURCE_DIR}/include
 ${OpenCV_INCLUDE_DIRS}
 ${LOG_C_INCLUDE_DIRS}
+${TOML11_INCLUDE_DIRS}
 )
 
 # Build output settings
