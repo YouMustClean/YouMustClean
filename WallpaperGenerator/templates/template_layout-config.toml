@@ -4,7 +4,7 @@
 # NOTE: THIS IS AN UNCOMPLETED TEMPLATE. Please revise this template
 # according to the demand and as the software improves.
 #
-# VERSION: 0.1
+# VERSION: 0.1.1
 #
 
 ## Global settings ##
@@ -27,14 +27,14 @@ image_source = ''
 type = 'image'
 path = ''       #< path to the image file
 # Position of the image's center
-[position]
+[elements.position]
 x = 'center'    #< center of the canvas
 y = '50%'       #< same as above
 
 # Text. Say hello!
 [[elements]]
 type = 'text'
-value = '"Hello! Don\'t forget to do your cleaning today."'
+value = '''"Hello! Don't forget to do your cleaning today."'''
 #< to display the content literally itself, put them inside a pair of "",
 #< otherwise the content would be parsed
 #
@@ -42,7 +42,7 @@ value = '"Hello! Don\'t forget to do your cleaning today."'
 height = '40%'      #< determines the height of the text box
 color = '#000000'   #< RGB color, hexadecimal
 # Position of the text's center
-[position]
+[elements.position]
 x = 'center'
 y = '40%'       #< 30% of the canvas' height away from the top
 
@@ -53,7 +53,7 @@ value = 'os.date()' #< tells local date
 #font = ''
 height = '30%'
 color = '#000000'
-[position]
+[elements.position]
 x = 'center'
 y = '80%'
 
