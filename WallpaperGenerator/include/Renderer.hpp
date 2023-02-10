@@ -32,8 +32,15 @@ namespace YMC {
 namespace WallpaperGenerator {
 namespace Renderer {
 
+/**
+ * @brief To merge source image on destination image.
+ * @note Both param src & dst have to be 4 channels matrix.
+ */
 void putImage(const cv::Mat & src, cv::Point offset, cv::Mat & dst);
 
+/**
+ * @brief put text on a destination image.
+ */
 void putText(TextConfig conf, const cv::Mat &dst);
 
 } // Renderer
