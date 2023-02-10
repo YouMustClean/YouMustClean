@@ -52,6 +52,7 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 add_executable(ymc-wallpaper-generator
 WallpaperGenerator.cpp
 src/Renderer.cpp
+src/DataTypes.cpp
 ${LOG_C_SRC}
 )
 
