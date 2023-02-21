@@ -17,23 +17,38 @@
 
 #pragma once
 
-#include <vector>
+extern "C" {
+#include <log.h>
+}
+
+#include <opencv2/core.hpp>
 #include <string>
+#include <exception>
 
-#include <opencv2/opencv.hpp>
+#include "DataTypes.hpp"
 
-using namespace std;
-using namespace cv;
+namespace YMC {
+namespace WallpaperGenerator {
+namespace ConfigParser {
 
-class TextConfig {
-public:
-	int height;
-	Point offset;
-	string fontPath, content;
-	Scalar color;
-	bool isPercent = false;
+/**
+ * @brief Parse formatted number (or phrase) in to pixel number
+ * @note Input include percentage (% ending), linguistic description
+ * (e.g. center), and raw pixel number (which can be directly returned).
+ *
+ * @return 1-dimensional coordinate, in pixel
+ */
+int parseCanvasSizeRelatedNumber(std::string number, int canvas_side_length);
 
-	// normally won't be changed
-	int thickness = -1, lineStyle = 8, baseline = 0;
-};
+int position2offset(int position, int element_size);
+
+int parseText(const string & statement);
+
+int hex2int(const string & hex);
+
+cv::Mat generateFromTOML(const std::string & toml_path);
+
+} // ConfigParser
+} // WallpaperGenerator
+} // YMC
 
