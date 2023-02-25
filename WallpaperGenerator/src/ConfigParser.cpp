@@ -28,15 +28,17 @@ namespace ConfigParser {
 
 int parseCanvasSizeRelatedNumber(std::string number, int canvas_side_length)
 {
-    if (number.back() == "%")
+    if (number.back() == '%')
     {
-        double percentage = std::stod(number.substr(0, number.length - 1));
+        double percentage = std::stod(number.substr(0, number.size() - 1));
         return (int)(percentage * canvas_side_length);
     }
     if (number == "center")
     {
         return (int)(0.5f * canvas_side_length);
     }
+    
+    return (int)std::stod(number);
 }
 
 
@@ -49,7 +51,7 @@ int position2offset(int position, int element_size)
 }
 
 
-int parseText(const string & statement)
+string parseText(const string & statement)
 {
     return statement;
 }
@@ -58,10 +60,10 @@ int parseText(const string & statement)
 int hex2int(const string & hex)
 {
     int result = 0;
-    for (int i = 0; i < hex.length; ++i)
+    for (uint32_t i = 0; i < hex.size(); ++i)
     {
         int number;
-        char char_num = hex[hex.length - 1 - i];
+        char char_num = hex[hex.size() - 1 - i];
         if (char_num > 0x2f && char_num < 0x3a)
         {
             number = char_num - 0x30;
@@ -72,7 +74,7 @@ int hex2int(const string & hex)
         }
         else
         {
-            throw exception("Wrong hex number!");
+            throw runtime_error("Wrong hex number!");
         }
         result += (1 << (4 * i)) * (number);
     }
@@ -88,20 +90,20 @@ cv::Mat generateFromTOML(const std::string & toml_path)
 
     // Canvas setting(s)
     const string canvas_image_source = toml::find<string>(toml_data, "image_source");
-    Mat wallpaper(canvas_image_source);
+    Mat wallpaper = imread(canvas_image_source);
  
     // Iterate the array of elements
-    const auto array_of_elements = toml::find(data, "elements");
+    const auto & array_of_elements = toml::find<vector<toml::table>>(toml_data, "elements");
     for (int i = 0; ; ++i)
     {
-        const auto element = toml::find(array_of_elements, i);
+        const toml::value & element = array_of_elements[i];
         string element_type = toml::find<string>(element, "type");
 
         if (element_type == "image")
         {
-            Mat image(toml::find<string>(element, "path"));
+            Mat image = imread(toml::find<string>(element, "path"));
 
-            const auto position = toml::find(element, "position");
+            const auto & position = toml::find(element, "position");
 
             const string position_x = toml::find<string>(position, "x");
             const string position_y = toml::find<string>(position, "y");
@@ -123,6 +125,8 @@ cv::Mat generateFromTOML(const std::string & toml_path)
 
             const string height_str = toml::find<string>(element, "height");
             const string color_str = toml::find<string>(element, "color");
+
+            const auto & position = toml::find(element, "position");
 
             const string position_x = toml::find<string>(position, "x");
             const string position_y = toml::find<string>(position, "y");
