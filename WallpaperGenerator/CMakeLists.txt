@@ -31,10 +31,15 @@ set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -Wall -O1 -g -ggdb -DLOG_USE_COL
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D__FILE_SHORT__='\"$(subst $(dir $(abspath $<)),,$(abspath $<))\"'")
 # toml11
 set(TOML11_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/../Thirdparty/toml11/)
+# Lua
+set(LUA_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/../Thirdparty/lua)
+set(LUA_LIBS ${PROJECT_SOURCE_DIR}/../Thirdparty/lua/liblua.a)
 
 # Thirdparty link libraries
 set(THIRDPARTY_LIBS
 ${OpenCV_LIBS}
+${LUA_LIBS}
+-ldl
 )
 
 # Include directories
@@ -43,6 +48,7 @@ ${PROJECT_SOURCE_DIR}/include
 ${OpenCV_INCLUDE_DIRS}
 ${LOG_C_INCLUDE_DIRS}
 ${TOML11_INCLUDE_DIRS}
+${LUA_INCLUDE_DIRS}
 )
 
 # Build output settings
