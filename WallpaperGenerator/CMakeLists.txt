@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
 project(WallpaperGenerator)
+set(PROGRAM_NAME ymc-wallpaper-generator)
+add_definitions(-DPROGRAM_NAME="${PROGRAM_NAME}")
 
 set(CMAKE_CXX_STANDARD 17)
 

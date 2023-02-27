@@ -1,17 +1,35 @@
-#include <iostream>
-#include "Renderer.hpp"
-#include <opencv2/opencv.hpp>
-using namespace YMC::WallpaperGenerator::Renderer;
-using namespace cv;
+#include <string>
+#include <stdio.h>
+#include <stdlib.h>
+#include "ConfigParser.hpp"
 
-int main() {
-    printf("Hello!\n");
-    Mat src = imread("../../testymc/yaya.png");
-    Mat background = imread("../../testymc/sun.jpg");
-    cvtColor(src, src, COLOR_RGB2RGBA);
-    cvtColor(background, background, COLOR_RGB2RGBA);
-    putImage(src, Point(1500, -500), background);
-    log_debug("background: (%d, %d, %d)", background.cols, background.rows, background.channels());
-    cv::imwrite("output.png", background); 
+extern "C" {
+#include <log.h>
+}
+
+
+int MainProcess(string toml_config_path, string output_path);
+
+int main(int argc, char **argv)
+{
+    if (argc != 3)
+    {
+        log_fatal("Missing command line parameter(s)!\n");
+        printf("Usage: %s <path_to_config.toml> <path_to_output>\n", PROGRAM_NAME);
+        return EXIT_FAILURE;
+    }
+
+    MainProcess(argv[1], argv[2]);
     return 0;
 }
+
+int MainProcess(string toml_config_path, string output_path)
+{
+    printf("%s\n", toml_config_path.c_str());
+    printf("%s\n\n", output_path.c_str());
+
+    cv::Mat output_img = YMC::WallpaperGenerator::ConfigParser::generateFromTOML(toml_config_path);
+    cv::imwrite(output_path, output_img);
+    return 0;
+}
+
