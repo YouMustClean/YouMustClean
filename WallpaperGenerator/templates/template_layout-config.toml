@@ -34,7 +34,7 @@ y = '50%'       #< same as above
 # Text. Say hello!
 [[elements]]
 type = 'text'
-value = ''' "Hello! Don't forget to do your cleaning today." '''
+value = "\"Hello! Don't forget to do your cleaning today.\""
 #< to display the content literally itself, put them inside a pair of "",
 #< otherwise the content would be parsed
 #< ONLY EXPRESSISIONS are allowed to be inside
