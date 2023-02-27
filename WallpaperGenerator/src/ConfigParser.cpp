@@ -39,7 +39,7 @@ int parseCanvasSizeRelatedNumber(std::string number, int canvas_side_length)
 {
     if (number.back() == '%')
     {
-        double percentage = std::stod(number.substr(0, number.size() - 1));
+        double percentage = std::stod(number.substr(0, number.size() - 1)) / 100;
         return (int)(percentage * canvas_side_length);
     }
     if (number == "center")
@@ -56,7 +56,7 @@ int position2offset(int position, int element_size)
     if (element_size % 2 != 0)
         return position - (int)(element_size / 2);
     else
-        return position - ((element_size / 2) - 1);
+        return position - (element_size / 2);
 }
 
 
@@ -108,8 +108,10 @@ cv::Mat generateFromTOML(const std::string & toml_path)
     const string font_path = toml::find<string>(toml_data, "default_font");
 
     // Canvas setting(s)
-    const string canvas_image_source = toml::find<string>(toml_data, "image_source");
+    const auto & canvas_settings = toml::find(toml_data, "canvas");
+    const string canvas_image_source = toml::find<string>(canvas_settings, "image_source");
     Mat wallpaper = imread(canvas_image_source);
+    cvtColor(wallpaper, wallpaper, COLOR_RGB2RGBA);
  
     // Iterate the array of elements
     const auto & array_of_elements = toml::find<vector<toml::table>>(toml_data, "elements");
@@ -121,6 +123,7 @@ cv::Mat generateFromTOML(const std::string & toml_path)
         if (element_type == "image")
         {
             Mat image = imread(toml::find<string>(element, "path"));
+            cvtColor(image, image, COLOR_RGB2RGBA);
 
             const auto & position = toml::find(element, "position");
 
