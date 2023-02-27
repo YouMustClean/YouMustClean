@@ -152,7 +152,7 @@ void putImage(const cv::Mat & src, cv::Point offset, cv::Mat & dst)
 /**
  * @brief put text on a destination image.
  */
-void putText(TextConfig conf, const cv::Mat &dst) {
+void putText(TextConfig conf, cv::Mat &dst) {
 	// initialize font
 	Ptr<freetype::FreeType2> ft2;
 	ft2 = freetype::createFreeType2();
@@ -170,7 +170,9 @@ void putText(TextConfig conf, const cv::Mat &dst) {
 	}
 
 	// put text on image
+    cvtColor(dst, dst, COLOR_RGBA2RGB);
 	ft2->putText(dst, conf.content, textOrg, conf.height, conf.color, conf.thickness, conf.lineStyle, false);
+    cvtColor(dst, dst, COLOR_RGB2RGBA);
 }
 
 } // Renderer

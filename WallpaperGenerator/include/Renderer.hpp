@@ -41,7 +41,7 @@ void putImage(const cv::Mat & src, cv::Point offset, cv::Mat & dst);
 /**
  * @brief put text on a destination image.
  */
-void putText(TextConfig conf, const cv::Mat &dst);
+void putText(TextConfig conf, cv::Mat &dst);
 
 } // Renderer
 } // WallpaperGenerator
