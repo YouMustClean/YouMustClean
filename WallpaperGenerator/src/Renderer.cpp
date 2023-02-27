@@ -77,11 +77,15 @@ void putImage(const cv::Mat & src, cv::Point offset, cv::Mat & dst)
     {
         src_roi_x -= offset.x;
         src_roi_w = src.cols - src_roi_x;
+        if (src_roi_w > dst.cols)
+            src_roi_w = mask_roi_w;
     }
     if (offset.y < 0)
     {
         src_roi_y -= offset.y;
         src_roi_h = src.rows - src_roi_y;
+        if (src_roi_h > dst.rows)
+            src_roi_h = mask_roi_h;
     }
     Rect src_roi(src_roi_x, src_roi_y, src_roi_w, src_roi_h);
     log_debug("src_roi corners: (%d, %d) (%d, %d)",
