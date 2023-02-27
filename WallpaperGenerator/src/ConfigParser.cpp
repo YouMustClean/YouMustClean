@@ -115,7 +115,7 @@ cv::Mat generateFromTOML(const std::string & toml_path)
  
     // Iterate the array of elements
     const auto & array_of_elements = toml::find<vector<toml::table>>(toml_data, "elements");
-    for (int i = 0; ; ++i)
+    for (uint32_t i = 0; i < array_of_elements.size(); ++i)
     {
         const toml::value & element = array_of_elements[i];
         string element_type = toml::find<string>(element, "type");
@@ -172,6 +172,7 @@ cv::Mat generateFromTOML(const std::string & toml_path)
             Renderer::putText(text_config, wallpaper);
         }
     }
+    return wallpaper;
 }
 
 } // ConfigParser
