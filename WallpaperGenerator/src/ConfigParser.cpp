@@ -17,7 +17,16 @@
 
 #include "ConfigParser.hpp"
 
+#include <vector>
+#include <exception>
+
 #include <toml.hpp>
+
+extern "C" {
+#include "lua.h"
+#include "lualib.h"
+#include "lauxlib.h"
+}
 
 using namespace std;
 using namespace cv;
@@ -51,9 +60,19 @@ int position2offset(int position, int element_size)
 }
 
 
-string parseText(const string & statement)
+string parseText(const string & expression)
 {
-    return statement;
+    string expr = "__expr__ = " + expression;
+    // Start a Lua interpreter
+    lua_State *L = luaL_newstate();
+    luaL_openlibs(L);
+    // Load & run
+    luaL_loadstring(L, expr.c_str());
+    lua_pcall(L, 0, 0, 0);
+
+    lua_getglobal(L, "__expr__");
+    expr = lua_tostring(L, -1);
+    return expr;
 }
 
 

@@ -23,8 +23,6 @@ extern "C" {
 
 #include <opencv2/core.hpp>
 #include <string>
-#include <vector>
-#include <exception>
 
 #include "DataTypes.hpp"
 #include "Renderer.hpp"
@@ -44,7 +42,7 @@ int parseCanvasSizeRelatedNumber(std::string number, int canvas_side_length);
 
 int position2offset(int position, int element_size);
 
-string parseText(const string & statement);
+string parseText(const string & expression);
 
 int hex2int(const string & hex);
 

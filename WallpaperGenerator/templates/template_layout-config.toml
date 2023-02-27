@@ -34,9 +34,10 @@ y = '50%'       #< same as above
 # Text. Say hello!
 [[elements]]
 type = 'text'
-value = '''"Hello! Don't forget to do your cleaning today."'''
+value = ''' "Hello! Don't forget to do your cleaning today." '''
 #< to display the content literally itself, put them inside a pair of "",
 #< otherwise the content would be parsed
+#< ONLY EXPRESSISIONS are allowed to be inside
 #
 #font = ''          #< font of the text, use default if not indicated
 height = '40%'      #< determines the height of the text box
@@ -49,7 +50,8 @@ y = '40%'       #< 30% of the canvas' height away from the top
 # Text, tells today's date.
 [[elements]]
 type = 'text'
-value = 'os.date()' #< tells local date
+value = 'os.date("%a %b %d, %Y")' #< tells local date
+#< <Weekday> <Month> <Day of a month>, <Year>
 #font = ''
 height = '30%'
 color = '#000000'
