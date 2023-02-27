@@ -7,8 +7,12 @@
 # Unignore all dirs
 !*/
 
+# ignore cache
+.cache/
+
 # ignore build diretory
 build/
+bin/
 
 # ignore helper scripts
 make.sh
@@ -16,6 +20,7 @@ run.sh
 
 # ignore information for static code analysis
 compile_commands.json
+.clangd/
 
 # ignore IDE configs
 .idea/
