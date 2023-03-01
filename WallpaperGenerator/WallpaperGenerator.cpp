@@ -1,6 +1,8 @@
 #include <string>
 #include <stdio.h>
 #include <stdlib.h>
+#include <exception>
+
 #include "ConfigParser.hpp"
 
 extern "C" {
@@ -19,7 +21,16 @@ int main(int argc, char **argv)
         return EXIT_FAILURE;
     }
 
-    MainProcess(argv[1], argv[2]);
+    try
+    {
+        MainProcess(argv[1], argv[2]);
+    }
+    catch (const std::exception & e)
+    {
+        fprintf(stderr, "\033[1;31;40mAN ERROR OCCURRED!\033[0m\n");
+        fprintf(stderr, "%s\n", e.what());
+        return EXIT_FAILURE;
+    }
     return 0;
 }
 
