@@ -4,10 +4,16 @@
 
 ## Build
 
-To build, execute the following commands:
+You will build Lua first:
+```bash
+cd ../Thirdparty/lua/
+make -j4
 ```
-mkdir build && cd build
+
+Then you'll build by executing the following commands:
+```bash
+mkdir -p build && cd build
 cmake ..
-make -j
+make -j4
 ```
 
