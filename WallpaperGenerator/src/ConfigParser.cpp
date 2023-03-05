@@ -95,11 +95,13 @@ cv::Mat generateFromTOML(const std::string & toml_path)
     const auto toml_data = toml::parse(toml_path);
 
     const string font_path = toml::find<string>(toml_data, "default_font");
+    check_file_accessibility(font_path.c_str());
 
     // Canvas setting(s)
     const auto & canvas_settings = toml::find(toml_data, "canvas");
     const string canvas_image_source = toml::find<string>(canvas_settings, "image_source");
     Mat wallpaper = imread(canvas_image_source);
+    check_image_validity(wallpaper, canvas_image_source.c_str());
     cvtColor(wallpaper, wallpaper, COLOR_RGB2RGBA);
  
     // Iterate the array of elements
@@ -113,7 +115,9 @@ cv::Mat generateFromTOML(const std::string & toml_path)
         {
             log_debug("Element [%d]: Processing as type \"image\"", i);
             log_debug("Element [%d]: Reading image from '%s'", i, toml::find<string>(element, "path").c_str());
-            Mat image = imread(toml::find<string>(element, "path"));
+            const string image_path = toml::find<string>(element, "path");
+            Mat image = imread(image_path);
+            check_image_validity(image, image_path.c_str());
             cvtColor(image, image, COLOR_RGB2RGBA);
 
             const auto & position = toml::find(element, "position");

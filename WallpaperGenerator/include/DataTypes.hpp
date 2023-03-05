@@ -19,11 +19,36 @@
 
 #include <vector>
 #include <string>
+#include <stdexcept>
+#include <unistd.h>
 
 #include <opencv2/opencv.hpp>
 
 using namespace std;
 using namespace cv;
+
+inline void check_file_accessibility(const char *fname)
+{
+    if (access(fname, F_OK) != 0)
+    {
+        throw runtime_error("File not found! Path: " + std::string(fname));
+    }
+    if (access(fname, R_OK) != 0)
+    {
+        throw runtime_error(
+                "File access denied! Unable to read the file! Path: "
+                + std::string(fname));
+    }
+}
+
+inline void check_image_validity(const cv::Mat & image, const char *fname)
+{
+    check_file_accessibility(fname);
+    if (image.empty())
+    {
+        throw runtime_error("Empty image! Path: " + std::string(fname));
+    }
+}
 
 class TextConfig {
 public:

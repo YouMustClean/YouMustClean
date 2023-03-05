@@ -16,10 +16,6 @@
  */
 
 #include "Renderer.hpp"
-#include <opencv2/calib3d.hpp>
-#include <opencv2/core.hpp>
-#include <opencv2/core/hal/interface.h>
-#include <opencv2/core/types.hpp>
 
 using namespace cv;
 
@@ -157,7 +153,7 @@ void putText(TextConfig conf, cv::Mat &dst) {
 	Ptr<freetype::FreeType2> ft2;
 	ft2 = freetype::createFreeType2();
 	ft2->loadFontData(conf.fontPath, 0);
-	
+
 	// set text position
 	Size textSize = ft2->getTextSize(conf.content, conf.height, conf.thickness, &conf.baseline);
 	Point textOrg;
