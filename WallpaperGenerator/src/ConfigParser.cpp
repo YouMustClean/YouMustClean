@@ -78,26 +78,15 @@ string parseText(const string & expression)
 
 int hex2int(const string & hex)
 {
-    int result = 0;
-    for (uint32_t i = 0; i < hex.size(); ++i)
-    {
-        int number;
-        char char_num = hex[hex.size() - 1 - i];
-        if (char_num > 0x2f && char_num < 0x3a)
-        {
-            number = char_num - 0x30;
-        }
-        else if (char_num > 0x40 && char_num < 0x47)
-        {
-            number = char_num - 0x40 + 9;
-        }
-        else
-        {
-            throw runtime_error("Wrong hex number!");
-        }
-        result += (1 << (4 * i)) * (number);
-    }
-    return result;
+	if (hex.size() != 2)
+	{
+		throw runtime_error("Wrong Hex Number!");
+	}
+	if (!isxdigit(hex[0]) || !isxdigit(hex[1]))
+	{
+		throw runtime_error("Wrong Hex Number!");
+	}
+	return stoi(hex, nullptr, 16);
 }
 
 
@@ -177,9 +166,9 @@ cv::Mat generateFromTOML(const std::string & toml_path)
             text_config.content = content;
             text_config.fontPath = font_path;
             text_config.height = parseCanvasSizeRelatedNumber(height_str, wallpaper.rows);
-            text_config.color = Scalar(hex2int(color_str.substr(1, 2)),
+            text_config.color = Scalar(hex2int(color_str.substr(5, 2)),
                                        hex2int(color_str.substr(3, 2)),
-                                       hex2int(color_str.substr(5, 2)));
+                                       hex2int(color_str.substr(1, 2)));
             text_config.offset = offset;
 
             // Render this element

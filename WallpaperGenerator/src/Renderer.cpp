@@ -166,7 +166,8 @@ void putText(TextConfig conf, cv::Mat &dst) {
 		textOrg.y = (dst.rows - conf.height) * conf.offset.y / 100;
 	}
 	else {
-		textOrg = conf.offset;
+		textOrg.x = conf.offset.x - textSize.width / 2;
+		textOrg.y = conf.offset.y - conf.height / 2;
 	}
 
 	// put text on image
