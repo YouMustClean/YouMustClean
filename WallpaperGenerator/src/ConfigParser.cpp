@@ -22,12 +22,6 @@
 
 #include <toml.hpp>
 
-extern "C" {
-#include "lua.h"
-#include "lualib.h"
-#include "lauxlib.h"
-}
-
 using namespace std;
 using namespace cv;
 
@@ -35,7 +29,7 @@ namespace YMC {
 namespace WallpaperGenerator {
 namespace ConfigParser {
 
-int parseCanvasSizeRelatedNumber(std::string number, int canvas_side_length)
+int parseCanvasSizeRelatedNumber(string number, int canvas_side_length)
 {
     if (number.back() == '%')
     {
@@ -60,14 +54,51 @@ int position2offset(int position, int element_size)
 }
 
 
-string parseText(const string & expression)
+void loadLuaScriptFile(lua_State * L, const std::string & path_script)
+{
+    int load_ret = luaL_loadfile(L, path_script.c_str());
+    if (load_ret == 0)
+    {
+        log_info("Lua script (file) successively loaded! Code: %d\n", load_ret);
+    }
+    if (load_ret || lua_pcall(L, 0, 0, 0))
+    {
+        throw runtime_error(
+                "Error while loading the Lua script.\nMessage: "
+                + std::string(lua_tostring(L, -1)) + "\nCode: "
+                + std::to_string(load_ret));
+    }
+}
+
+
+void loadLuaScriptString(lua_State *L, const std::string & code)
+{
+    int load_ret = luaL_loadstring(L, code.c_str());
+    if (load_ret == 0)
+    {
+        log_info("Additional Lua script (string) successively loaded! Code: %d\n", load_ret);
+    }
+    if (load_ret || lua_pcall(L, 0, 0, 0))
+    {
+        throw runtime_error(
+                "Error while loading the Lua script.\nMessage: "
+                + std::string(lua_tostring(L, -1)) + "\nCode: "
+                + std::to_string(load_ret));
+    }
+}
+
+
+string parseText(const string & expression, const string & path_additional_script)
 {
     string expr = "__expr__ = " + expression;
     // Start a Lua interpreter
     lua_State *L = luaL_newstate();
     luaL_openlibs(L);
+    // Load additional scripts
+    if (!path_additional_script.empty())
+        loadLuaScriptFile(L, path_additional_script);
     // Load & run
-    luaL_loadstring(L, expr.c_str());
+    loadLuaScriptString(L, expr);
     lua_pcall(L, 0, 0, 0);
 
     lua_getglobal(L, "__expr__");
@@ -90,7 +121,7 @@ int hex2int(const string & hex)
 }
 
 
-cv::Mat generateFromTOML(const std::string & toml_path)
+cv::Mat generateFromTOML(const string & toml_path, const string & path_additional_script)
 {
     const auto toml_data = toml::parse(toml_path);
 
@@ -145,7 +176,7 @@ cv::Mat generateFromTOML(const std::string & toml_path)
 
             string content = toml::find<string>(element, "value");
             log_debug("Element [%d]: Text (raw): {%s}", i, content.c_str());
-            content = parseText(content);
+            content = parseText(content, path_additional_script);
             log_debug("Element [%d]: Text (parsed): {%s}", i, content.c_str());
 
             const string height_str = toml::find<string>(element, "height");

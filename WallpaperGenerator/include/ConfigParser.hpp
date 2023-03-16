@@ -27,6 +27,12 @@ extern "C" {
 #include "DataTypes.hpp"
 #include "Renderer.hpp"
 
+extern "C" {
+#include "lua.h"
+#include "lualib.h"
+#include "lauxlib.h"
+}
+
 namespace YMC {
 namespace WallpaperGenerator {
 namespace ConfigParser {
@@ -42,11 +48,15 @@ int parseCanvasSizeRelatedNumber(std::string number, int canvas_side_length);
 
 int position2offset(int position, int element_size);
 
-string parseText(const string & expression);
+void loadLuaScriptFile(lua_State *L, const std::string & path_script);
 
-int hex2int(const string & hex);
+void loadLuaScriptString(lua_State *L, const std::string & code);
 
-cv::Mat generateFromTOML(const std::string & toml_path);
+string parseText(const std::string & expression, const std::string & path_additional_script="");
+
+int hex2int(const std::string & hex);
+
+cv::Mat generateFromTOML(const std::string & toml_path, const std::string & path_additional_script="");
 
 } // ConfigParser
 } // WallpaperGenerator
