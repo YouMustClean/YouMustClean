@@ -13,6 +13,7 @@
 # ignore build diretory
 build/
 bin/
+obj/
 
 # ignore helper scripts
 make.sh
@@ -23,6 +24,7 @@ compile_commands.json
 .clangd/
 
 # ignore IDE configs
+.vs/
 .idea/
 cmake-build-debug/
 
