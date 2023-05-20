@@ -14,6 +14,7 @@
 build/
 bin/
 obj/
+target/
 
 # ignore helper scripts
 make.sh
