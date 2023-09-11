@@ -28,9 +28,9 @@ find_package(OpenCV REQUIRED)
 set(LOG_C_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/../Thirdparty/log.c/src)
 set(LOG_C_SRC          ${PROJECT_SOURCE_DIR}/../Thirdparty/log.c/src/log.c)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DLOG_USE_COLOR")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -O2 -D__FILE_SHORT__='\"$(subst $(dir $(abspath $<)),,$(abspath $<))\"'")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -O2 -D__FILE_SHORT__='\"$(subst $(dir $(abspath $@)),,$(basename $(abspath $@)))\"'")
 set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -DLOG_USE_COLOR")
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D__FILE_SHORT__='\"$(subst $(dir $(abspath $<)),,$(abspath $<))\"'")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D__FILE_SHORT__='\"$(subst $(dir $(abspath $<)),,$(basename $(abspath $@)))\"'")
 # toml11
 set(TOML11_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/../Thirdparty/toml11/)
 # Lua
