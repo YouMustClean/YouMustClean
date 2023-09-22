@@ -7,3 +7,6 @@
 [submodule "Thirdparty/lua"]
 	path = Thirdparty/lua
 	url = git@github.com:lua/lua.git
+[submodule "Thirdparty/lua-csv"]
+	path = Thirdparty/lua-csv
+	url = git@github.com:geoffleyland/lua-csv

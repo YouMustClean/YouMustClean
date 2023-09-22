@@ -4,7 +4,7 @@
 # NOTE: THIS IS AN UNCOMPLETED TEMPLATE. Please revise this template
 # according to the demand and as the software improves.
 #
-# VERSION: 0.1.1
+# VERSION: 0.1.2
 #
 
 ## Global settings ##
@@ -14,6 +14,8 @@ default_font = ''   #< YOU MUST SET THIS UP!!!
 ## Canvas settings ##
 [canvas]
 image_source = ''
+theme = 'dark'  #< dark or bright
+theme_color_intensity = '50%'
 
 
 ## Array of elemects ##
@@ -41,7 +43,7 @@ value = "\"Hello! Don't forget to do your cleaning today.\""
 #
 #font = ''          #< font of the text, use default if not indicated
 height = '40%'      #< determines the height of the text box
-color = '#000000'   #< RGB color, hexadecimal
+color = '#FFFFFF'   #< RGB color, hexadecimal
 # Position of the text's center
 [elements.position]
 x = 'center'
@@ -54,7 +56,7 @@ value = 'os.date("%a %b %d, %Y")' #< tells local date
 #< <Weekday> <Month> <Day of a month>, <Year>
 #font = ''
 height = '30%'
-color = '#000000'
+color = '#FFFFFF'
 [elements.position]
 x = 'center'
 y = '80%'

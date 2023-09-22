@@ -29,6 +29,57 @@ namespace YMC {
 namespace WallpaperGenerator {
 namespace ConfigParser {
 
+float percentage2float(string percentage)
+{
+    if (percentage.back() != '%')
+    {
+        log_error("percentage2float(): Percentage not ending with '%%'! Value = {%s}", percentage.c_str());
+        char message_buf[128];
+        snprintf(message_buf, sizeof(message_buf),
+                 "percentage2float(): Percentage not ending with '%%'! Value = {%s}",
+                 percentage.c_str());
+        throw runtime_error(message_buf);
+    }
+    float perc_float = std::stof(percentage.substr(0, percentage.find("%")));
+    return perc_float / 100.0;
+}
+
+
+void castTheme(const string & canvas_theme, float intensity, cv::Mat & dst)
+{
+    if (intensity > 1.0 && intensity < 0.0)
+    {
+        log_fatal("castTheme(): Invalid color theme intensity! Intensity = {%f}", intensity);
+        char message_buf[128];
+        snprintf(message_buf, sizeof(message_buf),
+                 "castTheme(): Invalid color theme intensity! Intensity = {%f}",
+                 intensity);
+        throw runtime_error(message_buf);
+    }
+
+    if (canvas_theme == "dark")
+    {
+        log_debug("*******(): Canvas theme = {dark}, intensity = {%f}", intensity);
+        cv::Mat delta = cv::Mat(dst.size(), dst.type());
+        cv::multiply(Scalar::all(intensity), dst, delta);
+        cv::subtract(dst, delta, dst);
+    }
+    else if (canvas_theme == "bright")
+    {
+        log_debug("*******(): Canvas theme = {bright}, intensity = {%f}", intensity);
+        cv::multiply(Scalar::all(1 - intensity), dst, dst);
+        cv::add(dst, Scalar::all(intensity), dst);
+    }
+    else
+    {
+        log_error("*******(): Invalid theme {%s}!", canvas_theme.c_str());
+        char message_buf[128];
+        snprintf(message_buf, sizeof(message_buf), "*******(): Invalid theme {%s}!", canvas_theme.c_str());
+        throw runtime_error(message_buf);
+    }
+}
+
+
 int parseCanvasSizeRelatedNumber(string number, int canvas_side_length)
 {
     if (number.back() == '%')
@@ -134,6 +185,11 @@ cv::Mat generateFromTOML(const string & toml_path, const string & path_additiona
     Mat wallpaper = imread(canvas_image_source);
     check_image_validity(wallpaper, canvas_image_source.c_str());
     cvtColor(wallpaper, wallpaper, COLOR_RGB2RGBA);
+
+    const string canvas_theme = toml::find<string>(canvas_settings, "theme");
+    const string theme_color_intensity = toml::find<string>(canvas_settings, "theme_color_intensity");
+    const float intensity = percentage2float(theme_color_intensity);
+    castTheme(canvas_theme, intensity, wallpaper);
  
     // Iterate the array of elements
     const auto & array_of_elements = toml::find<vector<toml::table>>(toml_data, "elements");
