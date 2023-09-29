@@ -59,22 +59,22 @@ void castTheme(const string & canvas_theme, float intensity, cv::Mat & dst)
 
     if (canvas_theme == "dark")
     {
-        log_debug("*******(): Canvas theme = {dark}, intensity = {%f}", intensity);
+        log_debug("castTheme(): Canvas theme = {dark}, intensity = {%f}", intensity);
         cv::Mat delta = cv::Mat(dst.size(), dst.type());
         cv::multiply(Scalar::all(intensity), dst, delta);
         cv::subtract(dst, delta, dst);
     }
     else if (canvas_theme == "bright")
     {
-        log_debug("*******(): Canvas theme = {bright}, intensity = {%f}", intensity);
+        log_debug("castTheme(): Canvas theme = {bright}, intensity = {%f}", intensity);
         cv::multiply(Scalar::all(1 - intensity), dst, dst);
         cv::add(dst, Scalar::all(intensity), dst);
     }
     else
     {
-        log_error("*******(): Invalid theme {%s}!", canvas_theme.c_str());
+        log_error("castTheme(): Invalid theme {%s}!", canvas_theme.c_str());
         char message_buf[128];
-        snprintf(message_buf, sizeof(message_buf), "*******(): Invalid theme {%s}!", canvas_theme.c_str());
+        snprintf(message_buf, sizeof(message_buf), "castTheme(): Invalid theme {%s}!", canvas_theme.c_str());
         throw runtime_error(message_buf);
     }
 }
@@ -105,12 +105,12 @@ int position2offset(int position, int element_size)
 }
 
 
-void loadLuaScriptFile(lua_State * L, const std::string & path_script)
+void loadLuaScriptFile(lua_State *L, const std::string & path_script)
 {
     int load_ret = luaL_loadfile(L, path_script.c_str());
     if (load_ret == 0)
     {
-        log_info("Lua script (file) successively loaded! Code: %d\n", load_ret);
+        log_info("Lua script (file) successively loaded! Code: %d", load_ret);
     }
     if (load_ret || lua_pcall(L, 0, 0, 0))
     {
@@ -127,7 +127,7 @@ void loadLuaScriptString(lua_State *L, const std::string & code)
     int load_ret = luaL_loadstring(L, code.c_str());
     if (load_ret == 0)
     {
-        log_info("Additional Lua script (string) successively loaded! Code: %d\n", load_ret);
+        log_info("Additional Lua script (string) successively loaded! Code: %d", load_ret);
     }
     if (load_ret || lua_pcall(L, 0, 0, 0))
     {
@@ -150,7 +150,6 @@ string parseText(const string & expression, const string & path_additional_scrip
         loadLuaScriptFile(L, path_additional_script);
     // Load & run
     loadLuaScriptString(L, expr);
-    lua_pcall(L, 0, 0, 0);
 
     lua_getglobal(L, "__expr__");
     expr = lua_tostring(L, -1);
@@ -176,8 +175,8 @@ cv::Mat generateFromTOML(const string & toml_path, const string & path_additiona
 {
     const auto toml_data = toml::parse(toml_path);
 
-    const string font_path = toml::find<string>(toml_data, "default_font");
-    check_file_accessibility(font_path.c_str());
+    const string default_font_path = toml::find<string>(toml_data, "default_font");
+    check_file_accessibility(default_font_path.c_str());
 
     // Canvas setting(s)
     const auto & canvas_settings = toml::find(toml_data, "canvas");
@@ -235,6 +234,20 @@ cv::Mat generateFromTOML(const string & toml_path, const string & path_additiona
             content = parseText(content, path_additional_script);
             log_debug("Element [%d]: Text (parsed): {%s}", i, content.c_str());
 
+            const string *font_path = &default_font_path;
+            string alternate_font_path = "";
+            try
+            {
+                alternate_font_path = toml::find<string>(element, "font");
+                font_path = &alternate_font_path;
+            }
+            catch (const std::out_of_range & e)
+            {
+                log_warn("Element [%d]: Font not set, using default font.", i);
+                log_debug("Element [%d]: An exception from TOML11 is handled. "
+                          "Type: {std::out_of_range}. Error Message:\n%s", i, e.what());
+            }
+
             const string height_str = toml::find<string>(element, "height");
             const string color_str = toml::find<string>(element, "color");
             log_debug("Element [%d]: Height (raw): %s", i, height_str.c_str());
@@ -255,7 +268,7 @@ cv::Mat generateFromTOML(const string & toml_path, const string & path_additiona
             ///< Or change what the offset's representation to the center's position for the text?
             
             text_config.content = content;
-            text_config.fontPath = font_path;
+            text_config.fontPath = *font_path;
             text_config.height = parseCanvasSizeRelatedNumber(height_str, wallpaper.rows);
             text_config.color = Scalar(hex2int(color_str.substr(5, 2)),
                                        hex2int(color_str.substr(3, 2)),
@@ -267,6 +280,28 @@ cv::Mat generateFromTOML(const string & toml_path, const string & path_additiona
             Renderer::putText(text_config, wallpaper);
             log_debug("Element [%d]: Done", i);
         }
+    }
+
+    // Post-generation bahaviors
+    try
+    {
+        const auto & post_generation_behaviors = toml::find(toml_data, "post_generation_behaviors");
+        const string lua_code = toml::find<string>(post_generation_behaviors, "lua_code");
+        // Start a Lua interpreter
+        lua_State *L = luaL_newstate();
+        luaL_openlibs(L);
+        // Load additional scripts
+        if (!path_additional_script.empty())
+            loadLuaScriptFile(L, path_additional_script);
+        // Load & run
+        loadLuaScriptString(L, lua_code);
+
+    }
+    catch (const std::out_of_range & e)
+    {
+        log_info("generateFromTOML(): No post-generation behavior is set. Skipping.");
+        log_debug("generateFromTOML(): An exception from TOML11 is handled. "
+                    "Type: {std::out_of_range}. Error Message:\n%s", e.what());
     }
     return wallpaper;
 }

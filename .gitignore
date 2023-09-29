@@ -18,12 +18,14 @@ obj/
 # ignore helper scripts
 make.sh
 run.sh
+build.sh
 
 # ignore information for static code analysis
 compile_commands.json
 .clangd/
 
 # ignore IDE configs
+.vscode/
 .vs/
 .idea/
 cmake-build-debug/

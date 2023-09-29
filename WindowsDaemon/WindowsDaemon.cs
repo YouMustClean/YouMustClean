@@ -16,6 +16,7 @@ public class WindowsDaemon : BackgroundService
 
     private const string _data_root = @"%APPDATA%\YouMustClean\";
     private const string _WallpaperGenerator_bin_path = "ymc-wallpaper-generator.exe";
+    private readonly string _LUA_PATH = _data_root + @"lua\csv\?.lua;;";
     private readonly string _path_to_toml_config = _data_root + "wallpaper_configuration.toml";
     private readonly string _path_to_image_output = _data_root + "wallpaper.png";
     private readonly string _path_to_additinal_lua_script = _data_root + "script.lua";
@@ -34,6 +35,7 @@ public class WindowsDaemon : BackgroundService
 
         _last_change_time = DateTime.Today.AddHours(-24).AddHours(4);   ///< 4 A.M. yesterday
 
+        _LUA_PATH = Environment.ExpandEnvironmentVariables(_LUA_PATH);
         _path_to_toml_config = Environment.ExpandEnvironmentVariables(_path_to_toml_config);
         _path_to_image_output = Environment.ExpandEnvironmentVariables(_path_to_image_output);
         _path_to_additinal_lua_script = Environment.ExpandEnvironmentVariables(_path_to_additinal_lua_script);
@@ -87,6 +89,7 @@ public class WindowsDaemon : BackgroundService
     private int runWallpaperGenerator(out string stdout, out string stderr)
     {
         var proc = Cli.Wrap(Environment.ExpandEnvironmentVariables(_WallpaperGenerator_bin_path))
+                      .WithEnvironmentVariables(env => env.Set("LUA_PATH", _LUA_PATH))
                       .WithArguments(new[] { _path_to_toml_config, _path_to_image_output, _path_to_additinal_lua_script })
                       .WithWorkingDirectory(Environment.ExpandEnvironmentVariables(_data_root))
                       .WithValidation(CommandResultValidation.None);

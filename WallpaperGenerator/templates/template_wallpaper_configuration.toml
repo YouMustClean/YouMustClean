@@ -4,7 +4,7 @@
 # NOTE: THIS IS AN UNCOMPLETED TEMPLATE. Please revise this template
 # according to the demand and as the software improves.
 #
-# VERSION: 0.1.2
+# VERSION: 0.1.3
 #
 
 ## Global settings ##
@@ -16,6 +16,11 @@ default_font = ''   #< YOU MUST SET THIS UP!!!
 image_source = ''
 theme = 'dark'  #< dark or bright
 theme_color_intensity = '50%'
+
+
+## Things to do after generation ##
+[post_generation_behaviors]
+lua_code = 'update_schedule("schedule_cache", "group_list.csv")'
 
 
 ## Array of elemects ##
@@ -36,18 +41,39 @@ y = '50%'       #< same as above
 # Text. Say hello!
 [[elements]]
 type = 'text'
-value = "\"Hello! Don't forget to do your cleaning today.\""
+value = "\"Don't forget your cleaning job today!\""
 #< to display the content literally itself, put them inside a pair of "",
 #< otherwise the content would be parsed
 #< ONLY EXPRESSISIONS are allowed to be inside
 #
 #font = ''          #< font of the text, use default if not indicated
-height = '40%'      #< determines the height of the text box
+height = '10%'      #< determines the height of the text box
 color = '#FFFFFF'   #< RGB color, hexadecimal
 # Position of the text's center
 [elements.position]
 x = 'center'
-y = '40%'       #< 30% of the canvas' height away from the top
+y = '25%'       #< 25% of the canvas' height away from the top
+
+# Text group name
+[[elements]]
+type = 'text'
+value = "'Group ' .. get_today_group_name('schedule_cache', 'group_list.csv')"
+#font = ''
+height = '15%'
+color = '#FFFFFF'
+[elements.position]
+x = 'center'
+y = '45%'
+
+# Text group member names
+[[elements]]
+type = 'text'
+value = "get_today_group_members_string('schedule_cache', 'group_list.csv')"
+height = '5%'
+color = '#FFFFFF'
+[elements.position]
+x = 'center'
+y = '60%'
 
 # Text, tells today's date.
 [[elements]]
@@ -55,9 +81,9 @@ type = 'text'
 value = 'os.date("%a %b %d, %Y")' #< tells local date
 #< <Weekday> <Month> <Day of a month>, <Year>
 #font = ''
-height = '30%'
+height = '7%'
 color = '#FFFFFF'
 [elements.position]
 x = 'center'
-y = '80%'
+y = '75%'
 
