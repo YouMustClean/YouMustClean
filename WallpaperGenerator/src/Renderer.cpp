@@ -35,7 +35,7 @@ void putImage(const cv::Mat & src, cv::Point offset, cv::Mat & dst)
     log_debug("dst size (%d, %d, %d)", dst.cols, dst.rows, dst.channels());
 
     /// Create mask of the src
-    Mat masked_src(dst.rows, dst.cols, CV_8UC4, Scalar(0)); ///< 8 bit 4 channels RBGA image
+    Mat masked_src(dst.rows, dst.cols, CV_8UC3, Scalar(0)); ///< 8 bit 4 channels RBGA image
     log_debug("masked_src size (%d, %d)", dst.cols, dst.rows);
 
     int mask_roi_x = offset.x;
@@ -91,58 +91,8 @@ void putImage(const cv::Mat & src, cv::Point offset, cv::Mat & dst)
     src(src_roi).copyTo(masked_src(mask_roi));
     log_debug("src is copied to mask_src!");
 
-    /// Extract channels
-    Mat out_rgb = Mat::zeros(dst.size(), CV_32FC3);
-    Mat src_rgb, src_a;
-    Mat dst_rgb, dst_a;
-    // Split src
-    Mat temp[4];
-    masked_src.convertTo(masked_src, CV_32FC4);
-    cv::split(masked_src, temp);
-    cv::merge(temp, 3, src_rgb);
-    temp[0] = temp[1] = temp[2] = temp[3];
-    cv::merge(temp, 3, src_a);
-    cv::multiply(src_a, Scalar::all(1.0/255), src_a);
-    log_debug("splitting channels of src, done");
-    log_debug("src_rgb: (%d, %d, %d)", src_rgb.cols, src_rgb.rows, src_rgb.channels());
-    log_debug("src_a: (%d, %d, %d)", src_a.cols, src_a.rows, src_a.channels());
-    // Split dst
-    temp[0] = temp[1] = temp[2] = temp[3] = cv::Mat();
-    dst.convertTo(dst, CV_32FC4);
-    cv::split(dst, temp);
-    cv::merge(temp, 3, dst_rgb);
-    temp[0] = temp[1] = temp[2] = temp[3];
-    cv::merge(temp, 3, dst_a);
-    cv::multiply(dst_a, Scalar::all(1.0/255), dst_a);
-    log_debug("splitting channels of dst, done");
-    log_debug("dst_rgb: (%d, %d, %d)", dst_rgb.cols, dst_rgb.rows, dst_rgb.channels());
-    log_debug("dst_a: (%d, %d, %d)", dst_a.cols, dst_a.rows, dst_a.channels());
-    // Alpha blending
-    // *** RGB channels ***
-    cv::multiply(src_a, src_rgb, src_rgb);
-    cv::multiply(Scalar::all(1.0)-src_a, dst_rgb, dst_rgb);
-    cv::add(src_rgb, dst_rgb, out_rgb);
-    out_rgb.convertTo(out_rgb, CV_8UC3);
-    log_debug("blending RGB channels, done");
-    // *** alpha channel ***
-    temp[0] = temp[1] = temp[2] = temp[3] = cv::Mat();
-    cv::split(src_a, temp);
-    src_a = temp[0];
-    temp[0] = temp[1] = temp[2] = temp[3] = cv::Mat();
-    cv::split(dst_a, temp);
-    dst_a = temp[0];
-    cv::multiply(Scalar::all(1.0)-src_a, dst_a, dst_a);
-    cv::add(src_a, dst_a, dst_a);
-
-    cv::multiply(dst_a, Scalar::all(255), dst_a);
-    dst_a.convertTo(dst_a, CV_8UC1);
-    log_debug("blending alpha channel, done");
-    // Merge all
-    temp[0] = temp[1] = temp[2] = temp[3] = cv::Mat();
-    cv::split(out_rgb, temp);
-    temp[3] = dst_a;
-    cv::merge(temp, 4, dst);
-    log_debug("all channels merged, END OF INVOCATION");
+    // Keep masked_src for future updates
+    masked_src(mask_roi).copyTo(dst(mask_roi));
 }
 
 /**

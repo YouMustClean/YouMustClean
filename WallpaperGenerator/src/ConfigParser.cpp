@@ -183,7 +183,6 @@ cv::Mat generateFromTOML(const string & toml_path, const string & path_additiona
     const string canvas_image_source = toml::find<string>(canvas_settings, "image_source");
     Mat wallpaper = imread(canvas_image_source);
     check_image_validity(wallpaper, canvas_image_source.c_str());
-    cvtColor(wallpaper, wallpaper, COLOR_RGB2RGBA);
 
     const string canvas_theme = toml::find<string>(canvas_settings, "theme");
     const string theme_color_intensity = toml::find<string>(canvas_settings, "theme_color_intensity");
@@ -204,7 +203,6 @@ cv::Mat generateFromTOML(const string & toml_path, const string & path_additiona
             const string image_path = toml::find<string>(element, "path");
             Mat image = imread(image_path);
             check_image_validity(image, image_path.c_str());
-            cvtColor(image, image, COLOR_RGB2RGBA);
 
             const auto & position = toml::find(element, "position");
 
