@@ -1,6 +1,6 @@
 # YCM: YouMustClean
 
-## Building
+## Building WallpaperGenerator
 
 ### Requirements
 
@@ -13,6 +13,16 @@
 **Build System:** We use CMake as the only supported build system, so please make sure you have installed CMake for building YMC.
 
 #### On Ubuntu
+
+Clone our repository first.
+
+```bash
+## To whatever directory you want
+cd <root_of_repos>
+git clone https://github.com/YouMustClean/YouMustClean
+## Or
+git clone git@github.com:YouMustClean/YouMustClean
+```
 
 You must build required libraries under the following procedure, otherwise your compilation might fail at any possible point.
 
@@ -57,9 +67,14 @@ git checkout <version>
 cd ..
 ```
 
-Then build OpenCV like this:
+Many OpenCV modules will not be used by this project. If you also don't need these modules, you can use the flags provided by us in `YouMustClean/cmake_opencv4_flags.txt` to ignore these unused modules while building OpenCV.
 
 ```bash
+mkdir opencv/build && cd opencv/build
+cmake -DOPENCV_EXTRA_MODULES_PATH=../../opencv_contrib/modules `cat <root_of_repos>/YouMustClean/cmake_opencv4_flags.txt` ..
+sudo make install -j4
+
+## Or, if you want to compile all default modules
 mkdir opencv/build && cd opencv/build
 cmake -DOPENCV_EXTRA_MODULES_PATH=../../opencv_contrib/modules ..
 sudo make install -j4

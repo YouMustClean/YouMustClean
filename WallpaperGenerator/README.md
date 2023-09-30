@@ -1,4 +1,4 @@
-# WallpaperProcessing
+# WallpaperGenerator
 
 ## Introduction
 
